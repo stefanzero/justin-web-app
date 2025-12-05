@@ -6,6 +6,43 @@ header {
   background-color: #004d33;
 }
 
+.hero {
+  height: 100vh; /* Full screen height */
+  background-image: url("https://gggp.org/wp-content/uploads/2023/11/hero_gettinghere.jpg");
+  background-size: cover; /* Make the image cover the whole section */
+  background-position: center; /* Center the image */
+  background-repeat: no-repeat;
+  display: flex;
+  justify-content: center; /* Center content horizontally */
+  align-items: center; /* Center content vertically */
+  text-align: center;
+  padding: 0 20px; /* Mobile friendly padding */
+  color: white; /* Text color */
+}
+
+.hero-content {
+  max-width: 600px; /* Keeps text readable */
+}
+
+.hero h1 {
+  font-size: 3rem;
+  margin-bottom: 10px;
+}
+
+.hero p {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+}
+
+.hero-btn {
+  padding: 12px 24px;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+}
+
 main {
   text-align: center;
   font-weight: 400;
