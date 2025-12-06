@@ -1,47 +1,78 @@
 "use strict";
 
 const url =
-  "https://api.airtable.com/v0/appd2bG7WHqaMZuiX/Table%201?maxRecords=3&view=Grid%20view";
-// function for our list view
+  "https://api.airtable.com/v0/appd2bG7WHqaMZuiX/Table%201?maxRecords=10&view=Grid%20view";
+
 async function getAllRecords() {
-  let getResultElement = document.getElementById("brews");
+  const rows = [
+    document.getElementById("row1"), // 3 cards
+    document.getElementById("row2"), // 2 cards
+    document.getElementById("row3"), // 3 cards
+    document.getElementById("row4"), // 2 cards
+  ];
+
+  const rowStructure = [3, 2, 3, 2]; // how many cards per row
 
   const options = {
     method: "GET",
     headers: {
-      Authorization: `Bearer patkwXt1bmB9NocbI.2b2a3d222bc5c0de05595653a9c2fede447921fd0718fb14611729909c8aa5ba`,
+      Authorization: `Bearer patkwXt1bmB9NocbI.2b2a3d222bc5c0de05595653a9c2fede447921fd0718fb14611729909c8aa5ba
+
+
+
+
+
+`,
     },
   };
 
-  await fetch(url, options)
-    .then((response) => response.json())
-    .then((data) => {
-      console.log(data); // response is an object w/ .records array
+  try {
+    const response = await fetch(url, options);
+    const data = await response.json();
 
-      getResultElement.innerHTML = ""; // clear brews
+    // Flatten
+    const records = data.records.slice(0, 10);
 
-      let newHtml = "";
+    let recordIndex = 0;
 
-      for (let i = 0; i < data.records.length; i++) {
-        let image = data.records[i].fields["Image"]; // here we are getting column values
-        let poi = data.records[i].fields["POIs"]; //here we are using the Field ID to fecth the name property
-        let description = data.records[i].fields["Description"];
+    for (let row = 0; row < rows.length; row++) {
+      let html = "";
 
-        newHtml += `
-        
-         <div class="card" style="width: 18rem;">
-          <a href="" img src="${image[0].url}" class="card-img-top" alt="...">
-        <div class="card-body">
-          <h5 class="card-title">${poi}</h5>
-            <p class="card-text">${description}</p>
-              <a href="#" class="btn btn-primary">Go somewhere</a>
+      for (let i = 0; i < rowStructure[row]; i++) {
+        const record = records[recordIndex];
+        if (!record) break;
+
+        const fields = record.fields;
+        const poi = fields["POIs"] || "No Title";
+        const image1 = fields["Image1"] ? fields["Image1"][0].url : null;
+
+        const detailPageUrl = `/detail.html?id=${record.id}`;
+
+        html += `
+          <div class="col">
+            <a href="${detailPageUrl}" class="text-decoration-none text-dark">
+              <div class="card h-100" style="cursor:pointer;">
+                ${
+                  image1
+                    ? `<img src="${image1}" class="card-img-top fixed-image" alt="${poi}">`
+                    : ""
+                }
+                <div class="card-body">
+                  <h5 class="card-title">${poi}</h5>
+                </div>
+              </div>
+            </a>
           </div>
-        </div>
-    
-        
         `;
+
+        recordIndex++;
       }
 
-      getResultElement.innerHTML = newHtml;
-    });
+      rows[row].innerHTML = html;
+    }
+  } catch (error) {
+    console.error("Error:", error);
+  }
 }
+
+getAllRecords();
